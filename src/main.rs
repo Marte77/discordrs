@@ -210,9 +210,14 @@ async fn msg_responder(_handler: &Handler,_ctx: &Context, _msg: Message) {
             return;
         }
         if mensagem.starts_with("tweet") {
-            let tweet = mensagem.split_once("tweet").unwrap().1.to_string();
-            if tweet.as_str().len() == 0{
-                _msg.reply(_ctx, "mete texto do tweet").await.ok();
+            let mut tweet = mensagem.split_once("tweet").unwrap().1.to_string();
+            if tweet.as_str().len() == 0 {
+                if _msg.attachments.len() == 0 {
+                    _msg.reply(_ctx, "mete texto do tweet").await.ok();
+                    return;
+                }else {
+                    tweet = "".to_owned();
+                }
             }
             make_tweet(tweet, _handler, _ctx, _msg).await;
             return;
@@ -220,6 +225,14 @@ async fn msg_responder(_handler: &Handler,_ctx: &Context, _msg: Message) {
 
     }else{
         let mensagem = _msg.content.clone();
+        if mensagem.contains("help") {
+            match _msg.mentions_me(&_ctx.http).await{
+                Ok(res) => if res {
+                    help_msg(_handler,_ctx,_msg).await;
+                    return;},
+                Err(_) => {}
+            };
+        }
         if mensagem == "gg" {
             _msg.reply(_ctx, "gg").await.ok();
             return;
