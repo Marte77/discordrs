@@ -1,0 +1,20 @@
+activity_tipo: ["listening","competing", "streaming", "watching"] -> defaults to playing
+
+
+
+{
+	"prefix": "😡",
+	"token": "b",
+	"twitter_consumer_key": "b",
+	"twitter_consumer_secret": "b",
+	"twitter_bearer_token":"b",
+	"twitter_access_token_key": "v",
+	"twitter_access_token_secret": "",
+	"youtube_api_key" : "j",
+	"client_idgoogle":"m",
+	"client_secretgoogle":"i",
+	"redirect_urisgoogle":"http://.pt/",
+	"playing_activity": "a tua mae",
+	"activity_tipo": "watching",
+	"stream_link": "https://www.twitch.tv/ninja"
+}
