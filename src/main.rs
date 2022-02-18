@@ -26,7 +26,7 @@ use std::cell::RefCell;
 
 thread_local!(static DB_CONNECTION: RefCell<sqlite::Connection> = RefCell::new(sqlite::open("mensagens.db").unwrap()));
 const TABELA_DB:&str = "mensagens";
-const CREATE_QUERY:&str = "CREATE TABLE mensagens (mensagem TEXT, idutilizador TEXT, nomeutilizador TEXT)";
+const CREATE_QUERY:&str = "CREATE TABLE if not exists mensagens (mensagem TEXT, idutilizador TEXT, nomeutilizador TEXT)";
 fn map(x:usize, from_min:usize, from_max:usize, to_min:usize, to_max:usize) -> usize {
     return (x - from_min) * (to_max - to_min) / (from_max - from_min) + to_min;
 }
