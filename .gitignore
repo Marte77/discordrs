@@ -1,2 +1,4 @@
 /target
 config.json
+mensagens.db
+*.db

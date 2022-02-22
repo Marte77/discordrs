@@ -26,7 +26,7 @@ use std::cell::RefCell;
 
 thread_local!(static DB_CONNECTION: RefCell<sqlite::Connection> = RefCell::new(sqlite::open("mensagens.db").unwrap()));
 const TABELA_DB:&str = "mensagens";
-const CREATE_QUERY:&str = "CREATE TABLE if not exists mensagens (mensagem TEXT, idutilizador TEXT, nomeutilizador TEXT)";
+const CREATE_QUERY:&str = "CREATE TABLE if not exists mensagens (mensagem TEXT, idutilizador TEXT, nomeutilizador TEXT, datamensagem TEXT)";
 fn map(x:usize, from_min:usize, from_max:usize, to_min:usize, to_max:usize) -> usize {
     return (x - from_min) * (to_max - to_min) / (from_max - from_min) + to_min;
 }
@@ -78,10 +78,18 @@ fn inicializar_handler() -> Handler {
 }
 
 async fn msg_log(msg: &Message){
-    let mensagem:String = msg.content.clone();
+    let mut mensagem:String = msg.content.clone();
     DB_CONNECTION.with(|cell|{
         let con = cell.borrow_mut();
-        con.execute(format!("INSERT INTO {} values ('{}','{}','{}')", TABELA_DB, mensagem, msg.author.id.0, msg.author.name)).ok();
+        if mensagem.is_empty() && msg.attachments.len() != 0{
+            for att in &msg.attachments {
+                let url: String = att.url.clone();
+                let n = "\n";
+                let strfinal: String = [url.as_str(), n].concat();
+                mensagem.push_str(strfinal.as_str());
+            }
+        }
+        con.execute(format!("INSERT INTO {} values ('{}','{}','{}',(select datetime('now')))", TABELA_DB, mensagem, msg.author.id.0, msg.author.name)).ok();
     });
 }
 
