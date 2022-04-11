@@ -55,7 +55,7 @@ struct Handler{
 
 
 fn inicializar_handler() -> Handler {
-    let pathconfig: String = "./src/config.json".to_owned();
+    let pathconfig: String = "../../src/config.json".to_owned();
     let json_config_data_string: String = fs::read_to_string(pathconfig).expect("nao consegui ler a config.json"); 
     let json_config: serde_json::Value = serde_json::from_str(& json_config_data_string).expect("nao consegui fazer parse do json");
     return Handler {
@@ -413,8 +413,6 @@ async fn spam_ping(_handler: &Handler,_ctx: &Context, _msg: Message, npings: u32
         channelid.say(&_ctx.http,message.clone()).await.ok();
     }
 }
-
-
 #[tokio::main]
 async fn main() {
     let framework = StandardFramework::new()
