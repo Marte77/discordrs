@@ -27,38 +27,20 @@ use std::cell::RefCell;
 thread_local!(static DB_CONNECTION: RefCell<sqlite::Connection> = RefCell::new(sqlite::open("mensagens.db").unwrap()));
 const TABELA_DB:&str = "mensagens";
 const CREATE_QUERY:&str = "CREATE TABLE if not exists mensagens (mensagem TEXT, idutilizador TEXT, nomeutilizador TEXT, datamensagem TEXT)";
-fn map(x:usize, from_min:usize, from_max:usize, to_min:usize, to_max:usize) -> usize {
-    return (x - from_min) * (to_max - to_min) / (from_max - from_min) + to_min;
-}
 
 
-#[allow(dead_code)]
-struct Handler{
-    prefixo: String,
-    token: String,
-    twitter_consumer_key: String,
-    twitter_consumer_secret: String,
-    twitter_bearer_token: String,
-    twitter_access_token_key: String,
-    twitter_access_token_secret: String,
-    youtube_api_key: String,
-    client_idgoogle: String,
-    client_secretgoogle: String,
-    redirect_urisgoogle: String,
-    playing_activity: String,
-    activity_tipo: String,
-    stream_link: String
-}
+mod helper_funcs;
+mod helper_structs;
+mod funcs_twitter;
+mod funcs_msg_discord;
 
 
 
-
-
-fn inicializar_handler() -> Handler {
-    let pathconfig: String = "../../src/config.json".to_owned();
+fn inicializar_handler() -> helper_structs::Handler {
+    let pathconfig: String = /*"../../src/config.json"*/"./src/config.json".to_owned();
     let json_config_data_string: String = fs::read_to_string(pathconfig).expect("nao consegui ler a config.json"); 
     let json_config: serde_json::Value = serde_json::from_str(& json_config_data_string).expect("nao consegui fazer parse do json");
-    return Handler {
+    return helper_structs::Handler {
         prefixo: json_config["prefix"].to_string().replace("\"",""),
         token:json_config["token"].to_string().replace("\"",""),
         twitter_consumer_key:json_config["twitter_consumer_key"].to_string().replace("\"",""),
@@ -96,7 +78,7 @@ async fn msg_log(msg: &Message){
 
 //https://docs.rs/serenity/latest/serenity/prelude/trait.EventHandler.html#method.ready
 #[async_trait]
-impl EventHandler for Handler {
+impl EventHandler for helper_structs::Handler {
     async fn message(&self, ctx: Context, msg: Message){
         if msg.author.id.0 == 586601655244685318 {
             return;
@@ -127,7 +109,7 @@ impl EventHandler for Handler {
     }
 }
 
-async fn msg_responder(_handler: &Handler,_ctx: &Context, _msg: Message) {
+async fn msg_responder(_handler: &helper_structs::Handler,_ctx: &Context, _msg: Message) {
     if _msg.content.starts_with(_handler.prefixo.as_str()) {
         let conteudomensagem:  Vec<&str> = _msg.content.split(_handler.prefixo.as_str()).collect();
         let mut mensagem: String = String::from("");
@@ -142,20 +124,8 @@ async fn msg_responder(_handler: &Handler,_ctx: &Context, _msg: Message) {
             return;
         }
         if mensagem.contains("avatar") || mensagem.contains("pfp") {
-            if _msg.mentions.len() == 0 {
-                _msg.reply(_ctx, _msg.author.avatar_url().unwrap().as_str()).await.ok();
-                return;
-            }
-            let mut message = MessageBuilder::new();
-            for user in &_msg.mentions {
-                let mut c: String = "Pfp de ".to_owned();
-                c.push_str(user.name.as_str());
-                c.push_str(": ");
-                c.push_str(user.avatar_url().unwrap().as_str());
-                message.push_line(c);
-            }
-            let msgfinal = message.build();
-            _msg.reply(_ctx, msgfinal.as_str()).await.ok();
+            funcs_msg_discord::get_pfp_discord(_handler, _ctx, _msg).await;
+            return;
         }
         if mensagem.contains("ping") {
             let mut npings = 15;
@@ -183,7 +153,7 @@ async fn msg_responder(_handler: &Handler,_ctx: &Context, _msg: Message) {
                     tweet = "".to_owned();
                 }
             }
-            make_tweet(tweet, _handler, _ctx, _msg).await;
+            funcs_twitter::make_tweet(tweet, _handler, _ctx, _msg).await;
             return;
         }
         if mensagem.starts_with("join"){
@@ -191,6 +161,11 @@ async fn msg_responder(_handler: &Handler,_ctx: &Context, _msg: Message) {
                 Ok(_)=>{},
                 Err(_)=>{},
             };
+            //todo
+        }
+        if mensagem.starts_with("twt") {
+            funcs_twitter::download_video_twitter(_handler, _ctx, _msg, mensagem).await;
+            return;
         }
 
     }else{
@@ -256,7 +231,7 @@ async fn msg_responder(_handler: &Handler,_ctx: &Context, _msg: Message) {
     }
 }
 
-async fn join_call(_handler: &Handler,ctx: &Context, msg: &Message) -> CommandResult {
+async fn join_call(_handler: &helper_structs::Handler,ctx: &Context, msg: &Message) -> CommandResult {
     let guild = msg.guild(&ctx.cache).await.unwrap();
     let guild_id = guild.id;
 
@@ -281,68 +256,9 @@ async fn join_call(_handler: &Handler,ctx: &Context, msg: &Message) -> CommandRe
 }
 
 
-async fn make_tweet(tweet:String,_handler: &Handler,_ctx: &Context, _msg: Message){
-    let con_token = egg_mode::KeyPair::new(_handler.twitter_consumer_key.clone(), _handler.twitter_consumer_secret.clone());
-    let access_token = egg_mode::KeyPair::new(_handler.twitter_access_token_key.clone(), _handler.twitter_access_token_secret.clone());
-    let token = egg_mode::Token::Access {
-        consumer: con_token,
-        access: access_token,
-    };
-    let mut tweetbuilder = egg_mode::tweet::DraftTweet::new(tweet);
-    if _msg.attachments.len() > 0 {
-        for attachment in &_msg.attachments {
-            let tipooption = _msg.attachments[0].url.split(".").last();
-            let tipoimg = tipooption.as_deref().unwrap_or("default");
-            if tipoimg.contains("png") || tipoimg.contains("gif") || tipoimg.contains("mp4") || tipoimg.contains("jpg") || tipoimg.contains("jpeg") || tipoimg.contains("webp") {
-                let bytes = match attachment.download().await {
-                    Ok(b) => b,
-                    Err(_err) => {println!("{:#?}",_err);break},
-                };
-                let mediatype = match tipoimg {
-                    "png" => egg_mode::media::media_types::image_png(),
-                    "jpg" => egg_mode::media::media_types::image_jpg(),
-                    "jpeg" => egg_mode::media::media_types::image_jpg(),
-                    "mp4" => egg_mode::media::media_types::video_mp4(),
-                    "gif" => egg_mode::media::media_types::image_gif(),
-                    "webp" => egg_mode::media::media_types::image_webp(),
-                    _ => egg_mode::media::media_types::image_png()
-                };
-                match egg_mode::media::upload_media(&bytes, &mediatype, &token).await {
-                    Ok(media) => {
-                        let wait_time = std::time::Duration::from_millis(300);
-                        for _i in 0..15 {
-                            let id = media.id.clone();
-                            match egg_mode::media::get_status(id, &token).await {
-                                Ok(_status) => {
-                                    if _status.is_valid() {
-                                        tweetbuilder.add_media(_status.id);
-                                        break;
-                                    }else{
-                                        std::thread::sleep(wait_time);
-                                    }
-                                },
-                                Err(_) =>{
-                                    std::thread::sleep(wait_time);
-                                }
-                            };
-                            
-                        }
-                    },
-                    Err(_e) => {
-                    },
-                };
-            }     
-        }
-    }
-    match tweetbuilder.send(&token).await{
-        Ok(twee) => _msg.reply(_ctx, format!("Tweet aqui https://twitter.com/IlikeVeryPeidos/status/{}",twee.id)).await.ok(),
-        Err(_e) => {println!("{:#?}",_e);_msg.reply(_ctx, "erro a fazer o tweet").await.ok()},
-    };
-    
 
-}
 
-async fn help_msg(_handler: &Handler,_ctx: &Context, _msg: Message){
+async fn help_msg(_handler: &helper_structs::Handler,_ctx: &Context, _msg: Message){
     _msg.reply(_ctx, r#"
         `help` -> isto;
         `avatar` \|| `pfp` -> link com a imagem;
@@ -353,7 +269,7 @@ async fn help_msg(_handler: &Handler,_ctx: &Context, _msg: Message){
 
 
 
-async fn ghost_ping(_handler: &Handler,_ctx: &Context, _msg: Message){
+async fn ghost_ping(_handler: &helper_structs::Handler,_ctx: &Context, _msg: Message){
     _msg.reply(_ctx, "ok mano desculpa :pensive:").await.ok();
     let guildid = _msg.guild_id.unwrap();
     let channels = match guildid.channels(&_ctx.http).await {
@@ -381,7 +297,7 @@ async fn ghost_ping(_handler: &Handler,_ctx: &Context, _msg: Message){
             Ok(n) => n,
             Err(_e) => 0,
         };
-        let rand = map(random ,0,32767,0,channels.len()-1);
+        let rand = helper_funcs::map(random ,0,32767,0,channels.len()-1);
         let channelid = channels.keys().nth(rand).unwrap_or(&ChannelId(802241972168687647)); //get random key aka random channelid
         let msgbuild = MessageBuilder::new().mention(&_msg.author).build();
         let msg = channelid.say(&_ctx.http,msgbuild).await;
@@ -393,7 +309,7 @@ async fn ghost_ping(_handler: &Handler,_ctx: &Context, _msg: Message){
     }
 }
 
-async fn spam_ping(_handler: &Handler,_ctx: &Context, _msg: Message, npings: u32){
+async fn spam_ping(_handler: &helper_structs::Handler,_ctx: &Context, _msg: Message, npings: u32){
     if _msg.mentions.len() > 1 {
         _msg.reply_ping(_ctx, "Apenas um utilizador pode ser pingado").await.ok();
         return;

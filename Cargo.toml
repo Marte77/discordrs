@@ -11,7 +11,8 @@ tokio = { version = "1.16.1", features = ["full","macros", "rt-multi-thread", "s
 serenity = { version = "0.10", features = ["builder", "cache", "client", "framework", "gateway", "http", "model","voice", "standard_framework", "utils","rustls_backend"]}
 serde = { version = "1.0.104", features = ["derive"] }
 serde_json = "1.0.48"
-reqwest = { version = "0.11", features = ["json"] }
+reqwest = { version = "0.11", features = ["json", "blocking"] }
 egg-mode = "0.16"
 sqlite = "0.26.0"
 songbird = "0.2.2"
+regex = "1.5.5"
