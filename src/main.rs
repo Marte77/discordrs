@@ -96,7 +96,7 @@ impl EventHandler for Handler {
 }
 
 #[group]
-#[commands(help,oas,avatar,ping,xiu,tweet)]
+#[commands(help,oas,avatar,ping,xiu,tweet,tweedown)]
 struct General;
 
 #[tokio::main]

@@ -99,3 +99,95 @@ pub async fn tweet(ctx: &Context, msg: &Message, mut _args: Args) -> CommandResu
     make_tweet(conteudo_tweet, ctx, &msg).await?;
     Ok(())
 }
+
+#[command]
+pub async fn tweedown(ctx: &Context, msg: &Message, mut _args: Args) -> CommandResult {
+    let twitter_consumer_key = env::var("TWITTER_CONSUMER_KEY").expect("Expected a TWITTER_CONSUMER_KEY field in the environment");
+    let twitter_consumer_secret = env::var("TWITTER_CONSUMER_SECRET").expect("Expected a TWITTER_CONSUMER_SECRET field in the environment");
+    let twitter_access_token_key = env::var("TWITTER_ACCESS_TOKEN_KEY").expect("Expected a TWITTER_ACCESS_TOKEN_KEY field in the environment");
+    let twitter_access_token_secret = env::var("TWITTER_ACCESS_TOKEN_SECRET").expect("Expected a TWITTER_ACCESS_TOKEN_SECRET field in the environment");
+
+    let con_token = egg_mode::KeyPair::new(twitter_consumer_key, twitter_consumer_secret);
+    let access_token = egg_mode::KeyPair::new(twitter_access_token_key, twitter_access_token_secret);
+    let token = egg_mode::Token::Access {
+        consumer: con_token,
+        access: access_token,
+    };
+    
+
+    let typing = msg.channel_id.start_typing(&ctx.http)?;
+    match _args.single::<String>() {
+        Ok(l) => {
+            let mut url: Vec<&str> = l.split("?").collect();
+            url = url[0].split("/").collect();
+            if url.len() < 6 || url[5] == ""{
+                msg.reply(ctx, "Link inválido").await?;
+                let _ = typing.stop();
+                return Ok(())
+            }
+            let tweetid: u64 = match url[5].parse::<u64>() {
+                Ok(id) => id,
+                Err(_) => {
+                    msg.reply(ctx, "id inválido").await?;
+                    let _ = typing.stop();
+                    return Ok(())
+                }
+            };
+            let tweet: Option<egg_mode::tweet::ExtendedTweetEntities> = match egg_mode::tweet::show(tweetid, &token).await {
+                Ok(tw) => tw.response.extended_entities,
+                Err(_) => {
+                    msg.reply(ctx, "erro a encontrar o tweet").await?;
+                    let _ = typing.stop();
+                    return Ok(())
+                }
+            };
+            match tweet {
+                Some(media) => {
+                    for m in media.media {
+                        if m.media_type == egg_mode::entities::MediaType::Video{
+                            let vidinfo = m.video_info;
+                            match vidinfo {
+                                Some(videoinfo) => {
+                                    let video_mais_qualidade: &egg_mode::entities::VideoVariant = match videoinfo.variants.last(){
+                                        Some(video) => video,
+                                        None =>{
+                                            msg.reply(ctx, "Erro").await?;
+                                            let _ = typing.stop();
+                                            return Ok(())
+                                        }
+                                    };
+                                    let response = reqwest::get(video_mais_qualidade.url.to_owned()).await?.bytes().await?;
+                                    let mut fich: std::fs::File = std::fs::File::create("temp.mp4")?;
+                                    std::io::copy(&mut response.as_ref(), &mut fich)?;
+                                    let files = vec!["temp.mp4"];
+                                    msg.channel_id.send_files(ctx,files, |m| m.content("")).await?;
+                                    std::fs::remove_file("temp.mp4")?;
+                                    let _ = typing.stop();
+                                    return Ok(())
+                                },
+                                None =>{
+                                    msg.reply(ctx, "Erro").await?;
+                                    let _ = typing.stop();
+                                    return Ok(())
+                                }
+                            }
+                        }
+                    }
+                    let _ = typing.stop();
+                    msg.reply(ctx, "Tweet não tem vídeo").await?;
+                    return Ok(())
+                },
+                None => {
+                    let _ = typing.stop();
+                    msg.reply(ctx, "Tweet não tem vídeo").await?;
+                    return Ok(())
+                }
+            }
+        },
+        Err(_) => {
+            let _ = typing.stop();
+            msg.reply(ctx, "Mete link seu burro").await?;
+            return Ok(())
+        }
+    }
+}

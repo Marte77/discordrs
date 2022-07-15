@@ -23,6 +23,7 @@ pub async fn help(ctx: &Context, msg: &Message) -> CommandResult {
     `avatar` \|| `pfp` -> link com a imagem;
     `ping @user <npings>` -> pingar utilizador @user com 15 pings ou definir <npings>;
     `tweet <conteudo>` -> tweetar na minha conta
+    `tweedown <link do video>` -> fazer download dum video do twitter
     "#).await?;
     Ok(())
 }
