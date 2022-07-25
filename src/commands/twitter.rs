@@ -91,6 +91,26 @@ async fn make_tweet(tweet:String,_ctx: &Context, _msg: &Message) -> CommandResul
 
 #[command]
 pub async fn tweet(ctx: &Context, msg: &Message, mut _args: Args) -> CommandResult {
+    match env::var("CAN_TWEET") {
+        Ok(val) => {
+            match val.as_str() {
+                "true" => (),
+                "false" => {
+                    msg.reply(ctx, "Tweetar não está ativo").await?;
+                    return Ok(());
+                }
+                _ => {
+                    msg.reply(ctx, "env variable CAN_TWEET with wrong value").await?;
+                    return Ok(());
+                }
+            }
+        },
+        Err(_)=>{
+            msg.reply(ctx, "env variable CAN_TWEET not found").await?;
+            return Ok(());
+        }
+    }
+    
     let conteudo_tweet: String = _args.raw().collect::<Vec<&str>>().join(" ");
     if conteudo_tweet.len() == 0 {
         msg.reply(ctx, "mete texto do tweet maninho").await?;
