@@ -1,18 +1,28 @@
 use serenity::prelude::*;
-use serenity::model::channel::Message;
+use serenity::model::channel::{ChannelType,Message};
 use tokio::fs::File;
 use std::collections::HashMap;
 use std::process::Command;
 use std::str;
 use serenity::utils::MessageBuilder;
 use serenity::model::id::{ChannelId};
-
 fn map(x:usize, from_min:usize, from_max:usize, to_min:usize, to_max:usize) -> usize {
     return (x - from_min) * (to_max - to_min) / (from_max - from_min) + to_min;
 }
 
 
 pub async fn msg_responder(_ctx: &Context, _msg: Message) {
+    let channel_id = ChannelId(956968954620936282);
+    if _msg.channel_id == channel_id{
+        if _msg.attachments.len() > 0 {
+            channel_id.create_public_thread(_ctx,_msg.id,|builder|{
+                builder.name("Comias?");
+                builder.kind(ChannelType::PublicThread);
+                builder
+            }).await.ok();
+            return;
+        }
+    }
     let mensagem = _msg.content.clone();
         if mensagem.contains("help") {
             match _msg.mentions_me(&_ctx.http).await{
