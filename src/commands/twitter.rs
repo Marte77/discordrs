@@ -1,15 +1,7 @@
-#![allow(unused_imports)]
 use serenity::framework::standard::macros::{command};
 use serenity::framework::standard::{Args, CommandResult};
 use serenity::model::channel::Message;
 use serenity::prelude::*;
-use serenity::model::user::User;
-use serenity::model::id::{UserId,ChannelId};
-use serenity::utils::MessageBuilder;
-use std::collections::HashMap;
-use std::process::Command;
-use serenity::model::channel::Attachment;
-use std::str;
 use std::env;
 use tokio::time::sleep;
 
