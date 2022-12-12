@@ -1,0 +1,13 @@
+[Unit]
+Description=servico para correr o backend e frontend dos controladores do esp32
+After=network.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/discordrs/
+ExecStart= ./target/release/discordrs
+Restart=on-failure
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
