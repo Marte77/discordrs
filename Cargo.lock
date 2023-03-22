@@ -424,6 +424,7 @@ dependencies = [
  "cascade",
  "dotenv",
  "egg-mode",
+ "m3u8-rs",
  "reqwest",
  "serde",
  "serde_json",
@@ -1022,6 +1023,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "m3u8-rs"
+version = "5.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2c3b9f971e885044cb57330d3c89a4f3bd45fe97d01c93b3dcec57096efacffc"
+dependencies = [
+ "chrono",
+ "nom",
+]
+
+[[package]]
 name = "matchers"
 version = "0.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1158,9 +1169,9 @@ dependencies = [
 
 [[package]]
 name = "num_cpus"
-version = "1.13.1"
+version = "1.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "19e64526ebdee182341572e50e9ad03965aa510cd94427a4549448f285e957a1"
+checksum = "f6058e64324c71e02bc2b150e4f3bc8286db6c83092132ffa3f6b1eab0f9def5"
 dependencies = [
  "hermit-abi",
  "libc",

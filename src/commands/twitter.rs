@@ -1,8 +1,10 @@
 use serenity::framework::standard::macros::{command};
 use serenity::framework::standard::{Args, CommandResult};
+use serenity::futures::StreamExt;
 use serenity::model::channel::Message;
 use serenity::prelude::*;
 use std::env;
+use std::io::Write;
 use tokio::time::sleep;
 
 async fn make_tweet(tweet:String,_ctx: &Context, _msg: &Message) -> CommandResult {
@@ -168,14 +170,53 @@ pub async fn tweedown(ctx: &Context, msg: &Message, mut _args: Args) -> CommandR
                                             return Ok(())
                                         }
                                     };
-                                    let response = reqwest::get(video_mais_qualidade.url.to_owned()).await?.bytes().await?;
-                                    let mut fich: std::fs::File = std::fs::File::create("temp.mp4")?;
-                                    std::io::copy(&mut response.as_ref(), &mut fich)?;
-                                    let files = vec!["temp.mp4"];
-                                    msg.channel_id.send_files(ctx,files, |m| m.content("")).await?;
-                                    std::fs::remove_file("temp.mp4")?;
-                                    let _ = typing.stop();
-                                    return Ok(())
+                                    match video_mais_qualidade.content_type.essence_str() {
+                                        "application/x-mpegurl" => {
+                                            let mut fich: std::fs::File = std::fs::File::create("temp.mp4")?;
+                                            let mut stream = reqwest::get(video_mais_qualidade.url.to_owned()).await?.bytes_stream();
+                                            {
+                                                let chunk_res = stream.next().await.unwrap();
+                                                match chunk_res {
+                                                    Ok(_) => {},
+                                                    Err(_) => {
+                                                        msg.reply(ctx, "Erro").await?;
+                                                        let _ = typing.stop();
+                                                        return Ok(())
+                                                    }
+                                                }
+                                                let chunk = chunk_res.unwrap();
+                                                fich.write_all(&chunk)?;
+                                            }
+                                            while let Some(chunk_res) = stream.next().await {
+                                                match chunk_res {
+                                                    Ok(_) => {},
+                                                    Err(_) => {
+                                                        msg.reply(ctx, "Erro").await?;
+                                                        let _ = typing.stop();
+                                                        return Ok(())
+                                                    }
+                                                }
+                                                let chunk = chunk_res.unwrap();
+                                                fich.write_all(&chunk)?;
+                                            }
+                                            fich.flush()?;
+                                            let files = vec!["temp.mp4"];
+                                            msg.channel_id.send_files(ctx,files, |m| m.content("")).await?;
+                                            std::fs::remove_file("temp.mp4")?;
+                                            let _ = typing.stop();
+                                            return Ok(())
+                                        },
+                                        _ => {
+                                            let response = reqwest::get(video_mais_qualidade.url.to_owned()).await?.bytes().await?;
+                                            let mut fich: std::fs::File = std::fs::File::create("temp.mp4")?;
+                                            std::io::copy(&mut response.as_ref(), &mut fich)?;
+                                            let files = vec!["temp.mp4"];
+                                            msg.channel_id.send_files(ctx,files, |m| m.content("")).await?;
+                                            std::fs::remove_file("temp.mp4")?;
+                                            let _ = typing.stop();
+                                            return Ok(())
+                                        }
+                                    }
                                 },
                                 None =>{
                                     msg.reply(ctx, "Erro").await?;

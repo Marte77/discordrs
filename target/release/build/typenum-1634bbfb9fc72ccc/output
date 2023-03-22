@@ -1,0 +1,2 @@
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/Users/marte/Documents/GitHub/discordrs/target/release/build/typenum-1634bbfb9fc72ccc/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/Users/marte/Documents/GitHub/discordrs/target/release/build/typenum-1634bbfb9fc72ccc/out/op.rs

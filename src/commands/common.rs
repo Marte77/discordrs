@@ -55,6 +55,7 @@ pub async fn ping(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult
         .mention(&user)
         .build(); 
 
+
     for _i in 0..npings{
         channelid.say(&ctx.http,message.clone()).await.ok();
     }   

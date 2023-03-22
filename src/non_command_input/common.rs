@@ -12,17 +12,28 @@ fn map(x:usize, from_min:usize, from_max:usize, to_min:usize, to_max:usize) -> u
 
 
 pub async fn msg_responder(_ctx: &Context, _msg: Message) {
-    let channel_id = ChannelId(956968954620936282);
-    if _msg.channel_id == channel_id{
+    let comias_channel = ChannelId(956968954620936282);
+    let opinioes_channel = ChannelId(1087721669939953694);
+    if _msg.channel_id == comias_channel{
         if _msg.attachments.len() > 0 {
-            channel_id.create_public_thread(_ctx,_msg.id,|builder|{
+            comias_channel.create_public_thread(_ctx,_msg.id,|builder|{
                 builder.name("Comias?");
                 builder.kind(ChannelType::PublicThread);
                 builder
             }).await.ok();
             return;
         }
+    }else if _msg.channel_id == opinioes_channel {
+        if _msg.attachments.len() > 0 {
+            opinioes_channel.create_public_thread(_ctx,_msg.id,|builder|{
+                builder.name("Opiniões?");
+                builder.kind(ChannelType::PublicThread);
+                builder
+            }).await.ok();
+            return;
+        }
     }
+    
     let mensagem = _msg.content.clone();
         if mensagem.contains("help") {
             match _msg.mentions_me(&_ctx.http).await{
