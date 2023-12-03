@@ -132,6 +132,7 @@ pub async fn wakeonlan(ctx: &Context, msg: &Message) -> CommandResult {
             edit_builder=format!("erro a criar wol packet {:#?}", wol_error);
         }
     }
+    ctx.online().await;
     if let Ok(mut reply) = reply_result {
         reply.edit(ctx, |x|{
             x.content(edit_builder)
