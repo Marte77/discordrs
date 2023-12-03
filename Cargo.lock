@@ -57,6 +57,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "arrayvec"
+version = "0.7.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "96d30a06541fbafbc7f82ed10c06164cfbd2c401138f6addd8404629c4b16711"
+
+[[package]]
 name = "async-trait"
 version = "0.1.56"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -434,6 +440,7 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-subscriber",
+ "wakey",
 ]
 
 [[package]]
@@ -2130,7 +2137,7 @@ version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3e32b956473d98c601dac257fab8a7700d42e49fdd7a33432dd5dc7fdd2448dd"
 dependencies = [
- "arrayvec",
+ "arrayvec 0.4.12",
  "bitflags",
  "byteorder",
  "lazy_static",
@@ -2601,6 +2608,16 @@ name = "version_check"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
+
+[[package]]
+name = "wakey"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dedab5a691c0d33bcfb5c1ed6bb17265e531ed3392282eed9b20063a0f23e9f5"
+dependencies = [
+ "arrayvec 0.7.4",
+ "hex",
+]
 
 [[package]]
 name = "want"

@@ -1,4 +1,4 @@
-use serenity::framework::standard::macros::{command};
+use serenity::framework::standard::macros::command;
 use serenity::framework::standard::{Args, CommandResult};
 use serenity::model::channel::Message;
 use serenity::prelude::*;
@@ -10,6 +10,8 @@ use std::collections::HashMap;
 use std::process::Command;
 use std::str;
 
+use crate::handler::handler::HandlerStrings;
+
 fn map(x:usize, from_min:usize, from_max:usize, to_min:usize, to_max:usize) -> usize {
     return (x - from_min) * (to_max - to_min) / (from_max - from_min) + to_min;
 }
@@ -17,13 +19,17 @@ fn map(x:usize, from_min:usize, from_max:usize, to_min:usize, to_max:usize) -> u
 #[command]
 #[aliases("ajuda")]
 pub async fn help(ctx: &Context, msg: &Message) -> CommandResult {
-    msg.reply(ctx, r#"
-    `help` -> isto;
-    `avatar` \|| `pfp` -> link com a imagem;
-    `ping @user <npings>` -> pingar utilizador @user com 15 pings ou definir <npings>;
-    `tweet <conteudo>` -> tweetar na minha conta
-    `tweedown <link do video>` -> fazer download dum video do twitter
-    "#).await?;
+    let rwlock = ctx.data.read().await;
+    let handler = rwlock.get::<HandlerStrings>();
+    msg.reply(ctx, format!(r#"
+    para usar os comandos, usar o prefixo `{}`
+`help` -> isto;
+`avatar` \|| `pfp` -> link com a imagem;
+`ping @user <npings>` -> pingar utilizador @user com 15 pings ou definir <npings>;
+`tweet <conteudo>` -> tweetar na minha conta
+`tweedown <link do video>` -> fazer download dum video do twitter
+`wakeonlan [wifi]` -> enviar packet wakeonlan para o pc com servidor do mine
+"#, if handler.is_some() { handler.unwrap().prefixo.as_str() } else { "erro a obter prefixo" })).await?;
     Ok(())
 }
 
@@ -101,6 +107,35 @@ pub async fn xiu(ctx: &Context, msg: &Message) -> CommandResult {
             Err(_e) =>{ },
         }
         
+    }
+    Ok(())
+}
+
+#[command]
+#[aliases("wol")]
+pub async fn wakeonlan(ctx: &Context, msg: &Message) -> CommandResult {
+    ctx.dnd().await;
+    let reply_result = msg.reply(ctx, "espera um coche").await;
+    let wol_packet = if !msg.content.contains("wifi") 
+    {wakey::WolPacket::from_string("98:28:a6:2f:a0:ec",':')}
+    else {wakey::WolPacket::from_string("f8:a2:d6:50:2f:75",':')};
+    #[allow(unused_assignments)]
+    let mut edit_builder = "".to_owned();
+    match wol_packet {
+        Ok(wol) => {
+            match wol.send_magic() {
+                Ok(_) => edit_builder="wol packet enviado".to_owned(),
+                Err(magic_error) => edit_builder=format!("erro a enviar wol packet {:#?}", magic_error)
+            };
+        },
+        Err(wol_error) =>{
+            edit_builder=format!("erro a criar wol packet {:#?}", wol_error);
+        }
+    }
+    if let Ok(mut reply) = reply_result {
+        reply.edit(ctx, |x|{
+            x.content(edit_builder)
+        }).await?;
     }
     Ok(())
 }

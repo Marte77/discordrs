@@ -1,0 +1,12 @@
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/rand_core-4ca5feb41f82a681.rmeta: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/block.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/error.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/impls.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/le.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/os.rs
+
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/librand_core-4ca5feb41f82a681.rlib: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/block.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/error.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/impls.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/le.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/os.rs
+
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/rand_core-4ca5feb41f82a681.d: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/block.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/error.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/impls.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/le.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/os.rs
+
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/lib.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/block.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/error.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/impls.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/le.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rand_core-0.6.3/src/os.rs:

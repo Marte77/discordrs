@@ -1,0 +1,11 @@
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/crc32fast-48356e008d98f860.rmeta: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/baseline.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/combine.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/specialized/mod.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/table.rs
+
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/libcrc32fast-48356e008d98f860.rlib: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/baseline.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/combine.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/specialized/mod.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/table.rs
+
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/crc32fast-48356e008d98f860.d: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/baseline.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/combine.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/specialized/mod.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/table.rs
+
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/lib.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/baseline.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/combine.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/specialized/mod.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/crc32fast-1.3.2/src/table.rs:

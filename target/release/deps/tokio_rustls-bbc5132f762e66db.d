@@ -1,0 +1,11 @@
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/tokio_rustls-bbc5132f762e66db.rmeta: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/client.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/common/mod.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/common/handshake.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/server.rs
+
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/libtokio_rustls-bbc5132f762e66db.rlib: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/client.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/common/mod.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/common/handshake.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/server.rs
+
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/tokio_rustls-bbc5132f762e66db.d: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/client.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/common/mod.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/common/handshake.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/server.rs
+
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/lib.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/client.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/common/mod.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/common/handshake.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-rustls-0.23.4/src/server.rs:

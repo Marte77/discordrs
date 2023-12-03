@@ -1,0 +1,11 @@
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/httparse-0c636fd07d89eb49.rmeta: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/iter.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/macros.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/simd/mod.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/simd/fallback.rs
+
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/libhttparse-0c636fd07d89eb49.rlib: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/iter.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/macros.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/simd/mod.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/simd/fallback.rs
+
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/httparse-0c636fd07d89eb49.d: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/iter.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/macros.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/simd/mod.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/simd/fallback.rs
+
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/lib.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/iter.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/macros.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/simd/mod.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/httparse-1.7.1/src/simd/fallback.rs:

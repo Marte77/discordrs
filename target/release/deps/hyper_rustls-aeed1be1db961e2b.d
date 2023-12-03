@@ -1,0 +1,11 @@
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/hyper_rustls-aeed1be1db961e2b.rmeta: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/config.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/connector.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/connector/builder.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/stream.rs
+
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/libhyper_rustls-aeed1be1db961e2b.rlib: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/config.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/connector.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/connector/builder.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/stream.rs
+
+/Users/marte/Documents/GitHub/discordrs/target/release/deps/hyper_rustls-aeed1be1db961e2b.d: /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/lib.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/config.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/connector.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/connector/builder.rs /Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/stream.rs
+
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/lib.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/config.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/connector.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/connector/builder.rs:
+/Users/marte/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-rustls-0.23.0/src/stream.rs:

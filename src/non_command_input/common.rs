@@ -5,7 +5,9 @@ use std::collections::HashMap;
 use std::process::Command;
 use std::str;
 use serenity::utils::MessageBuilder;
-use serenity::model::id::{ChannelId};
+use serenity::model::id::ChannelId;
+
+use crate::handler::handler::HandlerStrings;
 fn map(x:usize, from_min:usize, from_max:usize, to_min:usize, to_max:usize) -> usize {
     return (x - from_min) * (to_max - to_min) / (from_max - from_min) + to_min;
 }
@@ -38,13 +40,17 @@ pub async fn msg_responder(_ctx: &Context, _msg: Message) {
         if mensagem.contains("help") {
             match _msg.mentions_me(&_ctx.http).await{
                 Ok(res) => if res {
-                    _msg.reply(_ctx, r#"
-                    `help` -> isto;
-                    `avatar` \|| `pfp` -> link com a imagem;
-                    `ping @user <npings>` -> pingar utilizador @user com 15 pings ou definir <npings>;
-                    `tweet <conteudo>` -> tweetar na minha conta
-                    `tweedown <link do video>` -> fazer download dum video do twitter
-                    "#).await.ok();
+                    let rwlock = _ctx.data.read().await;
+                    let handler = rwlock.get::<HandlerStrings>();
+                    _msg.reply(_ctx, format!(r#"
+para usar os comandos, usar o prefixo `{}`
+`help` -> isto;
+`avatar` \|| `pfp` -> link com a imagem;
+`ping @user <npings>` -> pingar utilizador @user com 15 pings ou definir <npings>;
+`tweet <conteudo>` -> tweetar na minha conta
+`tweedown <link do video>` -> fazer download dum video do twitter
+`wakeonlan [wifi]` -> enviar packet wakeonlan para o pc com servidor do mine
+"#, if handler.is_some() { handler.unwrap().prefixo.as_str() } else { "erro a obter prefixo" })).await.ok();
                     return;
                 },
                 Err(_) => {}

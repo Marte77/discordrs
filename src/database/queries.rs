@@ -1,6 +1,6 @@
 use serenity::model::prelude::Message;
 use crate::handler::handler::Handler;
-use crate::database::mensagens::{Mensagem};
+use crate::database::mensagens::Mensagem;
 //use serenity::model::application::interaction::Interaction;
 
 pub async fn log_message(message: &Message, handler: &Handler) -> sqlx::Result<sqlx::sqlite::SqliteQueryResult> {

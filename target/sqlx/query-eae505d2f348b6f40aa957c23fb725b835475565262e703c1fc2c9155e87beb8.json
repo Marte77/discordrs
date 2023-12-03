@@ -1,0 +1,11 @@
+{
+  "query": "INSERT into mensagens(mensagem, idutilizador, nomeutilizador, datacriacao, attachments_json, tipo_mensagem, channel_id) values (?,?,?,?,?,?,?);",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 7
+    },
+    "nullable": []
+  },
+  "hash": "a37ab1d3b004aa92b08e31ed94674bab9d6cca6edaac77e648d76ceccc0e9e38"
+}

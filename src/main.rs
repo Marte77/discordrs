@@ -17,6 +17,7 @@ pub mod handler;
 use std::collections::HashSet;
 use std::sync::Arc;
 
+use handler::handler::HandlerStrings;
 use serenity::async_trait;
 use serenity::client::bridge::gateway::ShardManager;
 use serenity::prelude::*;
@@ -27,9 +28,9 @@ use serenity::model::application::command::Command;
 use serenity::model::application::interaction::{Interaction, InteractionResponseType};
 use serenity::http::Http;
 use serenity::framework::standard::StandardFramework;
-use serenity::framework::standard::macros::{group};
+use serenity::framework::standard::macros::group;
 
-use tracing::{error};
+use tracing::error;
 
 pub struct ShardManagerContainer;
 
@@ -37,28 +38,26 @@ impl TypeMapKey for ShardManagerContainer {
     type Value = Arc<Mutex<ShardManager>>;
 }
 
-
-
 #[async_trait]
 impl EventHandler for Handler {
     async fn resume(&self,_ctx: Context, _: ResumedEvent){
-        match &self.activity_tipo as &str {
-            "listening" =>_ctx.set_activity(Activity::listening(&self.playing_activity)).await,
-            "competing" => _ctx.set_activity(Activity::competing(&self.playing_activity)).await,
-            "streaming" => _ctx.set_activity(Activity::streaming(&self.playing_activity,&self.stream_link)).await,
-            "watching" => _ctx.set_activity(Activity::watching(&self.playing_activity)).await,
-            _ => _ctx.set_activity(Activity::playing(&self.playing_activity)).await
+        match &self.handler_strings.activity_tipo as &str {
+            "listening" =>_ctx.set_activity(Activity::listening(&self.handler_strings.playing_activity)).await,
+            "competing" => _ctx.set_activity(Activity::competing(&self.handler_strings.playing_activity)).await,
+            "streaming" => _ctx.set_activity(Activity::streaming(&self.handler_strings.playing_activity,&self.handler_strings.stream_link)).await,
+            "watching" => _ctx.set_activity(Activity::watching(&self.handler_strings.playing_activity)).await,
+            _ => _ctx.set_activity(Activity::playing(&self.handler_strings.playing_activity)).await
         }
         println!("Estou resumidamente ready");
     }
     async fn ready(&self, _ctx: Context, _data_about_bot: Ready) {
         //registar activity type
-        match &self.activity_tipo as &str {
-            "listening" =>_ctx.set_activity(Activity::listening(&self.playing_activity)).await,
-            "competing" => _ctx.set_activity(Activity::competing(&self.playing_activity)).await,
-            "streaming" => _ctx.set_activity(Activity::streaming(&self.playing_activity,&self.stream_link)).await,
-            "watching" => _ctx.set_activity(Activity::watching(&self.playing_activity)).await,
-            _ => _ctx.set_activity(Activity::playing(&self.playing_activity)).await
+        match &self.handler_strings.activity_tipo as &str {
+            "listening" =>_ctx.set_activity(Activity::listening(&self.handler_strings.playing_activity)).await,
+            "competing" => _ctx.set_activity(Activity::competing(&self.handler_strings.playing_activity)).await,
+            "streaming" => _ctx.set_activity(Activity::streaming(&self.handler_strings.playing_activity,&self.handler_strings.stream_link)).await,
+            "watching" => _ctx.set_activity(Activity::watching(&self.handler_strings.playing_activity)).await,
+            _ => _ctx.set_activity(Activity::playing(&self.handler_strings.playing_activity)).await
         }
 
         //registar slash commands
@@ -104,14 +103,14 @@ impl EventHandler for Handler {
 }
 
 #[group]
-#[commands(help,oas,avatar,ping,xiu,tweet,tweedown)]
+#[commands(help,oas,avatar,ping,xiu,tweet,tweedown, wakeonlan)]
 struct General;
 
 #[tokio::main]
 async fn main(){
     let handler = Handler::new().await;
     tracing_subscriber::fmt::init();
-    let http = Http::new(&handler.token);
+    let http = Http::new(&handler.handler_strings.token);
 
     // We will fetch your bot's owners and id
     let (owners, _bot_id) = match http.get_current_application_info().await {
@@ -125,14 +124,15 @@ async fn main(){
     };
     
     let framework = StandardFramework::new()
-        .configure(|c| c.owners(owners).prefix(&handler.prefixo)).group(&GENERAL_GROUP) // set the bot's prefix to "~"
+        .configure(|c| c.owners(owners).prefix(&handler.handler_strings.prefixo)).group(&GENERAL_GROUP) // set the bot's prefix to "~"
         ;
     let intents = serenity::model::gateway::GatewayIntents::non_privileged() 
         | serenity::model::gateway::GatewayIntents::DIRECT_MESSAGES
         | serenity::model::gateway::GatewayIntents::GUILD_MESSAGES
         | serenity::model::gateway::GatewayIntents::MESSAGE_CONTENT
         ;
-    let mut client = Client::builder(&handler.token, intents)
+    let handler_strings = (&handler).handler_strings.clone();
+    let mut client = Client::builder(&handler_strings.token, intents)
         .framework(framework)
         .event_handler(handler)
         .await
@@ -140,6 +140,7 @@ async fn main(){
     
     {
         let mut data = client.data.write().await;
+        data.insert::<HandlerStrings>(handler_strings);
         data.insert::<ShardManagerContainer>(client.shard_manager.clone());
     }
 
