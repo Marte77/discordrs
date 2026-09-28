@@ -18,14 +18,16 @@ pub async fn insert_tracked_pfp(
     discord_user_id: &str,
     username: &str,
     avatar_url: &str,
+    avatar_base64: &str,
     handler: &Handler,
 ) -> sqlx::Result<sqlx::sqlite::SqliteQueryResult> {
     sqlx::query(
-        "INSERT INTO tracked_profile_pictures(discord_user_id, username, avatar_url) VALUES (?,?,?);",
+        "INSERT INTO tracked_profile_pictures(discord_user_id, username, avatar_url, avatar_base64) VALUES (?,?,?,?);",
     )
     .bind(discord_user_id)
     .bind(username)
     .bind(avatar_url)
+    .bind(avatar_base64)
     .execute(&handler.database)
     .await
 }

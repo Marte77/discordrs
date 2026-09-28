@@ -1,3 +1,4 @@
+use base64::encode;
 use serenity::builder::CreateApplicationCommand;
 use serenity::model::application::command::CommandOptionType;
 use serenity::model::prelude::interaction::application_command::{
@@ -27,9 +28,23 @@ pub async fn run(options: &[CommandDataOption], handler: &Handler) -> String {
             .and_then(|partial_member| partial_member.nick.clone())
             .unwrap_or_else(|| user.name.clone());
         let discord_user_id = user.id.to_string();
+        let avatar_bytes = match reqwest::get(&avatar_url).await {
+            Ok(response) => match response.bytes().await {
+                Ok(bytes) => bytes,
+                Err(err) => return format!("Failed to read avatar image bytes: {}", err),
+            },
+            Err(err) => return format!("Failed to download avatar image: {}", err),
+        };
+        let avatar_base64 = encode(&avatar_bytes);
 
-        match queries::insert_tracked_pfp(&discord_user_id, &display_name, &avatar_url, handler)
-            .await
+        match queries::insert_tracked_pfp(
+            &discord_user_id,
+            &display_name,
+            &avatar_url,
+            &avatar_base64,
+            handler,
+        )
+        .await
         {
             Ok(_) => format!("Tracked profile picture for {}.", display_name),
             Err(err) => format!("Failed to track profile picture: {}", err),
