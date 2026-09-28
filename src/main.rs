@@ -16,6 +16,7 @@ pub mod handler;
 
 use std::collections::HashSet;
 use std::sync::Arc;
+use std::time::Duration;
 
 use handler::handler::HandlerStrings;
 use serenity::async_trait;
@@ -28,6 +29,7 @@ use serenity::model::application::interaction::{Interaction, InteractionResponse
 use serenity::model::channel::Message;
 use serenity::model::event::ResumedEvent;
 use serenity::model::gateway::{Activity, Ready};
+use serenity::model::id::UserId;
 use serenity::prelude::*;
 
 use tracing::error;
@@ -118,6 +120,58 @@ impl EventHandler for Handler {
             }
         };
 
+        let handler = self.clone();
+        let http = _ctx.http.clone();
+        tokio::spawn(async move {
+            loop {
+                match queries::get_tracked_user_ids(&handler).await {
+                    Ok(discord_user_ids) => {
+                        for discord_user_id in discord_user_ids {
+                            let parsed_id = match discord_user_id.parse::<u64>() {
+                                Ok(id) => id,
+                                Err(err) => {
+                                    println!(
+                                        "failed to parse tracked discord_user_id {}: {}",
+                                        discord_user_id, err
+                                    );
+                                    continue;
+                                }
+                            };
+                            let user = match UserId(parsed_id).to_user(&http).await {
+                                Ok(user) => user,
+                                Err(err) => {
+                                    println!(
+                                        "failed to fetch tracked user {} from API: {}",
+                                        discord_user_id, err
+                                    );
+                                    continue;
+                                }
+                            };
+                            let display_name = user.name.clone();
+                            if let Err(err) = slash::track_pfp::track_user_avatar_snapshot(
+                                &user,
+                                &display_name,
+                                &handler,
+                                false,
+                            )
+                            .await
+                            {
+                                println!(
+                                    "failed to auto-track avatar for user {}: {}",
+                                    discord_user_id, err
+                                );
+                            }
+                        }
+                    }
+                    Err(err) => {
+                        println!("failed to read tracked users for polling: {}", err);
+                    }
+                }
+
+                tokio::time::sleep(Duration::from_secs(60 * 30)).await;
+            }
+        });
+
         println!("Estou ready");
     }
     async fn message(&self, _ctx: Context, msg: Message) {
@@ -125,6 +179,13 @@ impl EventHandler for Handler {
         if msg.author.id.0 == 586601655244685318 {
             return;
         }
+        let _ = slash::track_pfp::track_user_avatar_snapshot(
+            &msg.author,
+            &msg.author.name,
+            self,
+            false,
+        )
+        .await;
         msg_responder(&_ctx, msg).await;
     }
 

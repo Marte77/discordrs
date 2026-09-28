@@ -1,6 +1,7 @@
 use crate::database::mensagens::Mensagem;
 use crate::handler::handler::Handler;
 use serenity::model::prelude::Message;
+use sqlx::Row;
 //use serenity::model::application::interaction::Interaction;
 
 pub async fn log_message(
@@ -30,6 +31,60 @@ pub async fn insert_tracked_pfp(
     .bind(avatar_base64)
     .execute(&handler.database)
     .await
+}
+
+pub async fn upsert_tracked_user(
+    discord_user_id: &str,
+    username: &str,
+    handler: &Handler,
+) -> sqlx::Result<sqlx::sqlite::SqliteQueryResult> {
+    sqlx::query(
+        "INSERT INTO tracked_users(discord_user_id, username) VALUES (?,?)
+         ON CONFLICT(discord_user_id) DO UPDATE SET username=excluded.username;",
+    )
+    .bind(discord_user_id)
+    .bind(username)
+    .execute(&handler.database)
+    .await
+}
+
+pub async fn is_user_tracked(discord_user_id: &str, handler: &Handler) -> sqlx::Result<bool> {
+    let row = sqlx::query("SELECT 1 FROM tracked_users WHERE discord_user_id = ? LIMIT 1;")
+        .bind(discord_user_id)
+        .fetch_optional(&handler.database)
+        .await?;
+    Ok(row.is_some())
+}
+
+pub async fn latest_tracked_avatar_url(
+    discord_user_id: &str,
+    handler: &Handler,
+) -> sqlx::Result<Option<String>> {
+    let row = sqlx::query(
+        "SELECT avatar_url FROM tracked_profile_pictures
+         WHERE discord_user_id = ?
+         ORDER BY id DESC LIMIT 1;",
+    )
+    .bind(discord_user_id)
+    .fetch_optional(&handler.database)
+    .await?;
+
+    match row {
+        Some(row) => row.try_get::<String, _>("avatar_url").map(Some),
+        None => Ok(None),
+    }
+}
+
+pub async fn get_tracked_user_ids(handler: &Handler) -> sqlx::Result<Vec<String>> {
+    let rows = sqlx::query("SELECT discord_user_id FROM tracked_users;")
+        .fetch_all(&handler.database)
+        .await?;
+
+    let mut ids = Vec::with_capacity(rows.len());
+    for row in rows {
+        ids.push(row.try_get::<String, _>("discord_user_id")?);
+    }
+    Ok(ids)
 }
 //todo
 /*pub async fn insert_interaction(interaction: &Interaction, handler: &Handler) -> sqlx::Result<sqlx::sqlite::SqliteQueryResult> {
