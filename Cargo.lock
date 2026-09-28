@@ -427,6 +427,7 @@ dependencies = [
 name = "discordrs"
 version = "0.1.0"
 dependencies = [
+ "base64 0.13.0",
  "cascade",
  "dotenv",
  "egg-mode",
